@@ -1,0 +1,218 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<title>MindMoor — Conversa</title>
+<style>/* ═══════════════════════════════════════
+   CHAT WITH PSYCHOLOGIST
+═══════════════════════════════════════ */
+.chat-sidebar{background:#fff;border:1px solid var(--s200);border-radius:var(--rxl);overflow:hidden;box-shadow:var(--sh1);}
+.chat-sidebar-head{padding:16px;border-bottom:1px solid var(--s100);}
+.chat-sidebar-head h3{font-size:13px;font-weight:600;color:var(--s700);margin-bottom:8px;}
+.chat-contact{display:flex;align-items:center;gap:10px;padding:10px 16px;cursor:pointer;transition:background .1s;}
+.chat-contact:hover,.chat-contact.active{background:var(--b50);}
+.cc-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;position:relative;}
+.cc-online{position:absolute;bottom:1px;right:1px;width:9px;height:9px;border-radius:50%;background:var(--g500);border:2px solid #fff;}
+.cc-name{font-size:13px;font-weight:600;color:var(--s800);margin-bottom:1px;}
+.cc-preview{font-size:11px;color:var(--s400);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:140px;}
+.cc-badge{margin-left:auto;background:var(--b500);color:#fff;font-size:10px;padding:1px 6px;border-radius:var(--rf);}
+
+.chat-main{background:#fff;border:1px solid var(--s200);border-radius:var(--rxl);overflow:hidden;display:flex;flex-direction:column;box-shadow:var(--sh1);}
+.chat-head{padding:14px 18px;border-bottom:1px solid var(--s100);display:flex;align-items:center;gap:12px;}
+.chat-head-avatar{width:36px;height:36px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:12px;font-weight:600;flex-shrink:0;position:relative;}
+.chat-head-info{flex:1;}
+.chat-head-name{font-size:14px;font-weight:600;color:var(--s900);}
+.chat-head-status{font-size:11px;color:var(--g600);}
+.chat-head-actions{display:flex;gap:6px;}
+.chat-icon-btn{width:30px;height:30px;border-radius:7px;border:1px solid var(--s200);background:#fff;cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .1s;}
+.chat-icon-btn:hover{background:var(--s50);}
+.chat-icon-btn svg{width:14px;height:14px;stroke:var(--s500);stroke-width:1.8;fill:none;}
+
+.chat-messages{flex:1;padding:16px 18px;overflow-y:auto;display:flex;flex-direction:column;gap:14px;min-height:400px;max-height:calc(100vh - 300px);background:var(--s50);}
+.msg{display:flex;gap:9px;max-width:80%;}
+.msg.me{flex-direction:row-reverse;align-self:flex-end;}
+.msg-avatar{width:30px;height:30px;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:600;flex-shrink:0;margin-top:2px;}
+.msg-bubble{padding:10px 14px;border-radius:16px;font-size:13px;line-height:1.55;max-width:100%;}
+.msg.them .msg-bubble{background:#fff;border:1px solid var(--s200);color:var(--s700);border-radius:4px 16px 16px 16px;}
+.msg.me .msg-bubble{background:var(--b600);color:#fff;border-radius:16px 4px 16px 16px;}
+.msg-time{font-size:10px;color:var(--s400);margin-top:3px;text-align:right;}
+.msg.me .msg-time{text-align:left;}
+
+.chat-input-row{padding:12px 16px;border-top:1px solid var(--s100);display:flex;gap:8px;background:#fff;}
+.chat-input{
+  flex:1;padding:9px 14px;border:1px solid var(--s200);border-radius:var(--rf);
+  font-size:13px;color:var(--s800);outline:none;transition:border-color .12s;
+}
+.chat-input:focus{border-color:var(--b400);}
+.chat-send{
+  width:36px;height:36px;background:var(--b600);border:none;border-radius:50%;
+  cursor:pointer;display:flex;align-items:center;justify-content:center;transition:background .12s;flex-shrink:0;
+}
+.chat-send:hover{background:var(--b700);}
+.chat-send svg{width:15px;height:15px;stroke:#fff;stroke-width:2.2;fill:none;}
+
+.chat-date-sep{text-align:center;font-size:11px;color:var(--s400);padding:4px 0;}
+
+
+/* Chat page overrides */
+.g-chat{grid-template-columns:220px 1fr;}
+.chat-sidebar{height:calc(100vh - 120px);overflow-y:auto;}
+.chat-main{height:calc(100vh - 120px);overflow:hidden;}
+.chat-messages{flex:1;overflow-y:auto;min-height:0;max-height:none;}
+@media(min-width:1280px){.g-chat{grid-template-columns:240px 1fr;}}
+
+</style>
+</head>
+<body>
+<nav class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-row">
+        <div class="sb-logo-icon"><svg viewBox="0 0 20 20"><path d="M10 4c-3.3 0-6 2.7-6 6 0 1.5.6 3 1.5 4L10 17l4.5-3C15.4 13 16 11.5 16 10c0-3.3-2.7-6-6-6z" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="10" r="2"/></svg></div>
+        <div><div class="sb-logo-name">MindMoor</div><div class="sb-logo-clinic">Clínica Bem-Estar SP</div></div>
+      </div>
+    </div>
+
+    <div class="sb-user" onclick="window.location.href='profile.html'">
+      <div class="sb-avatar">AP</div>
+      <div><div class="sb-user-name">Ana Paula</div><div class="sb-user-sub">Paciente · Premium</div></div>
+    </div>
+
+    <div class="sb-nav">
+      <div class="sb-section">Principal</div>
+      <button class="sb-link active" id="nav-home" onclick="window.location.href='home.html'">
+        <svg viewBox="0 0 16 16"><path d="M2 6.5L8 2l6 4.5V14a.5.5 0 01-.5.5H3a.5.5 0 01-.5-.5V6.5z" stroke-linecap="round" stroke-linejoin="round"/></svg>Início
+      </button>
+      <button class="sb-link" id="nav-diary" onclick="window.location.href='diary.html'">
+        <svg viewBox="0 0 16 16"><rect x="2" y="1.5" width="12" height="13" rx="1.5"/><path d="M5 6h6M5 9h4" stroke-linecap="round"/></svg>Diário
+      </button>
+      <button class="sb-link" id="nav-sessions" onclick="window.location.href='sessions.html'">
+        <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2.5 2" stroke-linecap="round"/></svg>Sessões
+      </button>
+      <button class="sb-link" id="nav-chat" onclick="window.location.href='chat.html'">
+        <svg viewBox="0 0 16 16"><path d="M2 2h12v9H9l-2 2.5L5 11H2V2z" stroke-linecap="round" stroke-linejoin="round"/></svg>Conversa
+        <span class="cnt">2</span>
+      </button>
+
+      <div class="sb-section">Conteúdo</div>
+      <button class="sb-link" id="nav-articles" onclick="window.location.href='articles.html'">
+        <svg viewBox="0 0 16 16"><path d="M3 3h10M3 6h10M3 9h7M3 12h5" stroke-linecap="round"/></svg>Artigos
+      </button>
+      <button class="sb-link" id="nav-activities" onclick="window.location.href='activities.html'">
+        <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><path d="M5.5 8l2 2 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>Atividades
+      </button>
+      <button class="sb-link" id="nav-community" onclick="window.location.href='community.html'">
+        <svg viewBox="0 0 16 16"><circle cx="6" cy="5.5" r="2.5"/><path d="M1 14c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke-linecap="round"/><circle cx="12" cy="4" r="2"/><path d="M15 12c0-2-1.34-3.5-3-3.5" stroke-linecap="round"/></svg>Comunidade
+        <span class="cnt">3</span>
+      </button>
+
+      <div class="sb-section">Saúde</div>
+      <button class="sb-link" id="nav-medications" onclick="window.location.href='medications.html'">
+        <svg viewBox="0 0 16 16"><rect x="5" y="2" width="6" height="12" rx="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 8h6" stroke-linecap="round"/></svg>Medicações
+      </button>
+      <button class="sb-link" id="nav-milestones" onclick="window.location.href='milestones.html'">
+        <svg viewBox="0 0 16 16"><path d="M8 2l1.6 4.2H14l-3.6 2.6 1.4 4.2L8 10.6 4.2 13l1.4-4.2L2 6.2h4.4z" stroke-linecap="round" stroke-linejoin="round"/></svg>Conquistas
+      </button>
+      <div class="sb-section">Conta</div>
+      <button class="sb-link" id="nav-profile" onclick="window.location.href='profile.html'">
+        <svg viewBox="0 0 16 16"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3.31 2.69-6 6-6s6 2.69 6 6" stroke-linecap="round"/></svg>Perfil
+      </button>
+    </div>
+
+    <div class="sb-emergency" onclick="window.location.href='emergency.html'">
+      <div class="sb-em-top"><div class="sb-em-dot"></div><span class="sb-em-title">Preciso de apoio agora</span></div>
+      <div class="sb-em-sub">Recursos imediatos · 1 clique</div>
+    </div>
+  </nav>
+<div class="main-wrap">
+  <div class="topbar">
+      <span class="tb-title" id="page-title">Início</span>
+      <div class="tb-right">
+        <button class="tb-btn" onclick="openModal('breath-modal')">
+          <svg viewBox="0 0 14 14" stroke-linecap="round"><circle cx="7" cy="7" r="5.5"/><path d="M7 4.5v2.5l1.5 1.5"/></svg>
+          Respiração
+        </button>
+        <button class="tb-btn primary" onclick="window.location.href='sessions.html'">
+          <svg viewBox="0 0 14 14" stroke-linecap="round"><path d="M7 2v10M2 7h10"/></svg>
+          Nova sessão
+        </button>
+        <button class="tb-btn" onclick="window.location.href='profile.html'" style="padding:6px 10px;">
+          <div style="width:24px;height:24px;border-radius:50%;background:var(--b50);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--b700);">AP</div>
+        </button>
+      </div>
+    </div>
+  <div class="content">
+<div class="pg-head"><div class="pg-title">Conversa</div><div class="pg-sub">Mensagens com sua equipe terapêutica.</div></div>
+        <div class="g-chat">
+          <div class="chat-sidebar">
+            <div class="chat-sidebar-head">
+              <h3>Contatos</h3>
+              <input class="finput" style="font-size:12px;padding:7px 10px;" placeholder="Buscar...">
+            </div>
+            <div class="chat-contact active" onclick="selectChat('camila')">
+              <div class="cc-avatar" style="background:var(--p50);color:var(--p700);">CR<div class="cc-online"></div></div>
+              <div style="flex:1;min-width:0;">
+                <div class="cc-name">Dra. Camila Rocha</div>
+                <div class="cc-preview">Lembre de registrar como se sentiu...</div>
+              </div>
+              <span class="cc-badge">2</span>
+            </div>
+            <div class="chat-contact" onclick="selectChat('clinica')">
+              <div class="cc-avatar" style="background:var(--b50);color:var(--b700);">BE</div>
+              <div style="flex:1;min-width:0;">
+                <div class="cc-name">Clínica Bem-Estar</div>
+                <div class="cc-preview">Confirmação da sua sessão de sexta</div>
+              </div>
+            </div>
+            <div style="padding:12px 16px;border-top:1px solid var(--s100);font-size:11px;color:var(--s400);">As mensagens são confidenciais e seguras.</div>
+          </div>
+          <div class="chat-main">
+            <div class="chat-head">
+              <div class="chat-head-avatar" style="background:var(--p50);color:var(--p700);" id="chat-avatar">CR<div class="cc-online"></div></div>
+              <div class="chat-head-info">
+                <div class="chat-head-name" id="chat-name">Dra. Camila Rocha</div>
+                <div class="chat-head-status" id="chat-status">Online agora · CRP 06/12345</div>
+              </div>
+              <div class="chat-head-actions">
+                <div class="chat-icon-btn" onclick="toast('Chamada de vídeo iniciada!')"><svg viewBox="0 0 14 14"><rect x="1" y="3" width="9" height="8" rx="1.5"/><path d="M10 5.5l3-1.5v6l-3-1.5v-3z" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+                <div class="chat-icon-btn" onclick="toast('Chamada de voz iniciada!')"><svg viewBox="0 0 14 14"><path d="M3 3h2l1 3.5-1.5.9a9 9 0 004.1 4.1l.9-1.5 3.5 1V13A1 1 0 0112 14 11 11 0 011 3a1 1 0 011-1h1z" stroke-linecap="round" stroke-linejoin="round"/></svg></div>
+              </div>
+            </div>
+            <div class="chat-messages" id="chat-msgs">
+              <div class="chat-date-sep">Ontem</div>
+              <div class="msg them">
+                <div class="msg-avatar" style="background:var(--p50);color:var(--p700);">CR</div>
+                <div><div class="msg-bubble">Olá Ana Paula! Como você está se sentindo desde nossa última sessão?</div><div class="msg-time">09:14</div></div>
+              </div>
+              <div class="msg me">
+                <div class="msg-avatar" style="background:var(--b50);color:var(--b700);">AP</div>
+                <div><div class="msg-bubble">Oi Dra. Camila! Tem sido uma semana bem mais tranquila. Consegui usar a respiração quando senti a ansiedade chegando.</div><div class="msg-time">09:32</div></div>
+              </div>
+              <div class="msg them">
+                <div class="msg-avatar" style="background:var(--p50);color:var(--p700);">CR</div>
+                <div><div class="msg-bubble">Que ótimo, Ana! Isso é exatamente o que trabalhamos. Continue registrando no diário — é muito importante para vermos o progresso juntas. 🌱</div><div class="msg-time">09:45</div></div>
+              </div>
+              <div class="chat-date-sep">Hoje</div>
+              <div class="msg them">
+                <div class="msg-avatar" style="background:var(--p50);color:var(--p700);">CR</div>
+                <div><div class="msg-bubble">Lembre de registrar como se sentiu após a sessão. Nos vemos sexta! 😊</div><div class="msg-time">08:12</div></div>
+              </div>
+            </div>
+            <div class="chat-input-row">
+              <input class="chat-input" id="chat-input" placeholder="Escreva sua mensagem..." onkeydown="if(event.key==='Enter')sendChat()">
+              <button class="chat-send" onclick="sendChat()"><svg viewBox="0 0 15 15"><path d="M13 7.5L2 2l2 5.5-2 5.5 11-5.5z" stroke-linecap="round" stroke-linejoin="round"/></svg></button>
+            </div>
+          </div>
+        </div>
+  </div>
+</div>
+
+<script src="app.js"></script>
+<script>(function(){var nl=document.getElementById('nav-chat');if(nl)nl.classList.add('active');var tb=document.getElementById('page-title');if(tb)tb.textContent='Conversa';})();</script>
+
+<div class="toast" id="toast-el"></div>
+<div class="celebration-toast" id="celebration-toast"><span id="cel-emoji">🌸</span><span id="cel-msg"></span></div>
+</body>
+</html>

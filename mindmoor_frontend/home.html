@@ -1,0 +1,344 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<title>MindMoor — Início</title>
+<style>/* ═══════════════════════════════════════
+   DASHBOARD
+═══════════════════════════════════════ */
+.dash-welcome{
+  background:linear-gradient(135deg,var(--s900) 0%,var(--b800) 100%);
+  border-radius:var(--rxl);padding:28px 32px;margin-bottom:20px;
+  position:relative;overflow:hidden;
+}
+.dash-welcome::before{
+  content:'';position:absolute;top:-60px;right:-60px;
+  width:220px;height:220px;border-radius:50%;
+  background:rgba(255,255,255,.04);
+}
+.dash-welcome::after{
+  content:'';position:absolute;bottom:-40px;right:120px;
+  width:140px;height:140px;border-radius:50%;
+  background:rgba(255,255,255,.03);
+}
+.dw-top{display:flex;align-items:flex-start;justify-content:space-between;position:relative;z-index:1;}
+.dw-greeting{font-size:13px;color:rgba(255,255,255,.55);margin-bottom:4px;}
+.dw-name{font-family:var(--fd);font-size:28px;color:#fff;margin-bottom:6px;}
+.dw-meta{font-size:13px;color:rgba(255,255,255,.5);}
+.dw-streak{
+  background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.15);
+  border-radius:var(--rl);padding:10px 16px;text-align:center;
+}
+.dw-streak-num{font-family:var(--fd);font-size:24px;color:#fff;}
+.dw-streak-lbl{font-size:11px;color:rgba(255,255,255,.5);}
+
+.mood-row{
+  background:#fff;border:1px solid var(--s200);border-radius:var(--rxl);
+  padding:16px 20px;margin-bottom:20px;
+  display:flex;align-items:center;gap:16px;flex-wrap:wrap;
+  box-shadow:var(--sh1);
+}
+.mood-q{font-size:13px;font-weight:600;color:var(--s700);white-space:nowrap;}
+.mood-chips{display:flex;gap:6px;}
+.mc{
+  padding:7px 14px;border-radius:var(--rf);border:1.5px solid transparent;
+  background:var(--s50);cursor:pointer;transition:all .12s;
+  font-size:13px;display:flex;align-items:center;gap:5px;
+}
+.mc:hover{background:var(--b50);border-color:var(--b200);}
+.mc.sel{background:var(--b50);border-color:var(--b400);}
+.mc-note{flex:1;min-width:180px;}
+.mc-note input{width:100%;padding:8px 13px;border:1px solid var(--s200);border-radius:var(--rf);font-size:13px;color:var(--s800);outline:none;background:var(--s50);transition:all .12s;}
+.mc-note input:focus{border-color:var(--b400);background:#fff;}
+.mood-save{padding:8px 18px;background:var(--b600);color:#fff;border:none;border-radius:var(--rf);font-size:13px;font-weight:600;cursor:pointer;white-space:nowrap;transition:background .12s;}
+.mood-save:hover{background:var(--b700);}
+
+.week-chart{padding:4px 24px 16px;}
+.bars{display:flex;gap:8px;align-items:flex-end;height:80px;margin-bottom:8px;}
+.bar-col{flex:1;display:flex;flex-direction:column;align-items:center;gap:4px;}
+.bar-fill{width:100%;background:var(--b100);border-radius:4px 4px 0 0;transition:height .4s ease,background .2s;}
+.bar-fill.today{background:var(--b500);}
+.bar-fill:hover{background:var(--b300);cursor:pointer;}
+.bar-day{font-size:10px;color:var(--s400);}
+
+
+.content > *:last-child{margin-bottom:40px;}
+
+/* Next session card */
+.next-sess-card{
+  background:var(--s900);border-radius:var(--rxl);padding:22px 24px;
+  position:relative;overflow:hidden;box-shadow:var(--sh2);
+}
+.next-sess-card::before{
+  content:'';position:absolute;top:-40px;right:-40px;
+  width:140px;height:140px;border-radius:50%;
+  background:rgba(255,255,255,.04);pointer-events:none;
+}
+.nsc-label{
+  font-size:10px;letter-spacing:.09em;text-transform:uppercase;
+  color:rgba(255,255,255,.45);margin-bottom:5px;
+}
+.nsc-name{
+  font-family:var(--fd);font-size:18px;color:#fff;
+  margin-bottom:3px;position:relative;z-index:1;
+}
+.nsc-meta{
+  font-size:12px;color:rgba(255,255,255,.5);
+  margin-bottom:16px;position:relative;z-index:1;
+}
+.nsc-actions{display:flex;gap:8px;position:relative;z-index:1;}
+.nsc-btn{
+  padding:8px 16px;border-radius:var(--rr);
+  font-family:var(--fb);font-size:12px;font-weight:600;
+  cursor:pointer;transition:opacity .12s;border:none;
+  display:inline-flex;align-items:center;gap:5px;
+}
+.nsc-btn.w{background:#fff;color:var(--s900);}
+.nsc-btn.w:hover{opacity:.9;}
+.nsc-btn.g{
+  background:rgba(255,255,255,.12);color:#fff;
+  border:1px solid rgba(255,255,255,.2);
+}
+.nsc-btn.g:hover{background:rgba(255,255,255,.2);}
+.nsc-btn svg{width:12px;height:12px;stroke:currentColor;stroke-width:2;fill:none;}
+
+</style>
+</head>
+<body>
+<nav class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-row">
+        <div class="sb-logo-icon"><svg viewBox="0 0 20 20"><path d="M10 4c-3.3 0-6 2.7-6 6 0 1.5.6 3 1.5 4L10 17l4.5-3C15.4 13 16 11.5 16 10c0-3.3-2.7-6-6-6z" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="10" r="2"/></svg></div>
+        <div><div class="sb-logo-name">MindMoor</div><div class="sb-logo-clinic">Clínica Bem-Estar SP</div></div>
+      </div>
+    </div>
+
+    <div class="sb-user" onclick="window.location.href='profile.html'">
+      <div class="sb-avatar">AP</div>
+      <div><div class="sb-user-name">Ana Paula</div><div class="sb-user-sub">Paciente · Premium</div></div>
+    </div>
+
+    <div class="sb-nav">
+      <div class="sb-section">Principal</div>
+      <button class="sb-link active" id="nav-home" onclick="window.location.href='home.html'">
+        <svg viewBox="0 0 16 16"><path d="M2 6.5L8 2l6 4.5V14a.5.5 0 01-.5.5H3a.5.5 0 01-.5-.5V6.5z" stroke-linecap="round" stroke-linejoin="round"/></svg>Início
+      </button>
+      <button class="sb-link" id="nav-diary" onclick="window.location.href='diary.html'">
+        <svg viewBox="0 0 16 16"><rect x="2" y="1.5" width="12" height="13" rx="1.5"/><path d="M5 6h6M5 9h4" stroke-linecap="round"/></svg>Diário
+      </button>
+      <button class="sb-link" id="nav-sessions" onclick="window.location.href='sessions.html'">
+        <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2.5 2" stroke-linecap="round"/></svg>Sessões
+      </button>
+      <button class="sb-link" id="nav-chat" onclick="window.location.href='chat.html'">
+        <svg viewBox="0 0 16 16"><path d="M2 2h12v9H9l-2 2.5L5 11H2V2z" stroke-linecap="round" stroke-linejoin="round"/></svg>Conversa
+        <span class="cnt">2</span>
+      </button>
+
+      <div class="sb-section">Conteúdo</div>
+      <button class="sb-link" id="nav-articles" onclick="window.location.href='articles.html'">
+        <svg viewBox="0 0 16 16"><path d="M3 3h10M3 6h10M3 9h7M3 12h5" stroke-linecap="round"/></svg>Artigos
+      </button>
+      <button class="sb-link" id="nav-activities" onclick="window.location.href='activities.html'">
+        <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><path d="M5.5 8l2 2 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>Atividades
+      </button>
+      <button class="sb-link" id="nav-community" onclick="window.location.href='community.html'">
+        <svg viewBox="0 0 16 16"><circle cx="6" cy="5.5" r="2.5"/><path d="M1 14c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke-linecap="round"/><circle cx="12" cy="4" r="2"/><path d="M15 12c0-2-1.34-3.5-3-3.5" stroke-linecap="round"/></svg>Comunidade
+        <span class="cnt">3</span>
+      </button>
+
+      <div class="sb-section">Saúde</div>
+      <button class="sb-link" id="nav-medications" onclick="window.location.href='medications.html'">
+        <svg viewBox="0 0 16 16"><rect x="5" y="2" width="6" height="12" rx="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 8h6" stroke-linecap="round"/></svg>Medicações
+      </button>
+      <button class="sb-link" id="nav-milestones" onclick="window.location.href='milestones.html'">
+        <svg viewBox="0 0 16 16"><path d="M8 2l1.6 4.2H14l-3.6 2.6 1.4 4.2L8 10.6 4.2 13l1.4-4.2L2 6.2h4.4z" stroke-linecap="round" stroke-linejoin="round"/></svg>Conquistas
+      </button>
+      <div class="sb-section">Conta</div>
+      <button class="sb-link" id="nav-profile" onclick="window.location.href='profile.html'">
+        <svg viewBox="0 0 16 16"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3.31 2.69-6 6-6s6 2.69 6 6" stroke-linecap="round"/></svg>Perfil
+      </button>
+    </div>
+
+    <div class="sb-emergency" onclick="window.location.href='emergency.html'">
+      <div class="sb-em-top"><div class="sb-em-dot"></div><span class="sb-em-title">Preciso de apoio agora</span></div>
+      <div class="sb-em-sub">Recursos imediatos · 1 clique</div>
+    </div>
+  </nav>
+<div class="main-wrap">
+  <div class="topbar">
+      <span class="tb-title" id="page-title">Início</span>
+      <div class="tb-right">
+        <button class="tb-btn" onclick="openModal('breath-modal')">
+          <svg viewBox="0 0 14 14" stroke-linecap="round"><circle cx="7" cy="7" r="5.5"/><path d="M7 4.5v2.5l1.5 1.5"/></svg>
+          Respiração
+        </button>
+        <button class="tb-btn primary" onclick="window.location.href='sessions.html'">
+          <svg viewBox="0 0 14 14" stroke-linecap="round"><path d="M7 2v10M2 7h10"/></svg>
+          Nova sessão
+        </button>
+        <button class="tb-btn" onclick="window.location.href='profile.html'" style="padding:6px 10px;">
+          <div style="width:24px;height:24px;border-radius:50%;background:var(--b50);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--b700);">AP</div>
+        </button>
+      </div>
+    </div>
+  <div class="content" style="overflow-y:auto;">
+<div class="dash-welcome">
+          <div class="dw-top">
+            <div>
+              <div class="dw-greeting">Bom dia,</div>
+              <div class="dw-name">Ana Paula ☀️</div>
+              <div class="dw-meta">Quinta, 23 de abril · Clínica Bem-Estar SP</div>
+            </div>
+            <div class="dw-streak"><div class="dw-streak-num">7</div><div class="dw-streak-lbl">dias seguidos</div></div>
+          </div>
+        </div>
+
+        <div class="mood-row">
+          <span class="mood-q">Como você está agora?</span>
+          <div class="mood-chips">
+            <div class="mc" onclick="selMc(this)"><span>😔</span> mal</div>
+            <div class="mc" onclick="selMc(this)"><span>😕</span> baixo</div>
+            <div class="mc" onclick="selMc(this)"><span>😐</span> neutro</div>
+            <div class="mc sel" onclick="selMc(this)"><span>🙂</span> bem</div>
+            <div class="mc" onclick="selMc(this)"><span>😊</span> ótimo</div>
+          </div>
+          <div class="mc-note"><input placeholder="Alguma observação? (opcional)" id="mood-note"></div>
+          <button class="mood-save" onclick="saveMoodDash()">Registrar</button>
+        </div>
+
+        <div class="g4" style="margin-bottom:16px;">
+          <div class="stat-card">
+            <div class="sc-top"><div><div class="sc-val">7</div><div class="sc-lbl">Dias seguidos</div></div><div class="sc-icon" style="background:var(--b50)"><svg viewBox="0 0 16 16" stroke="var(--b600)" stroke-linecap="round"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2.5 1.5"/></svg></div></div>
+            <div class="sc-trend trend-up">↑ recorde!</div>
+          </div>
+          <div class="stat-card">
+            <div class="sc-top"><div><div class="sc-val">3</div><div class="sc-lbl">Sessões este mês</div></div><div class="sc-icon" style="background:var(--p50)"><svg viewBox="0 0 16 16" stroke="var(--p600)" stroke-linecap="round"><circle cx="5.5" cy="5" r="2.5"/><path d="M1 13c0-2.76 2-5 4.5-5"/><circle cx="12" cy="4" r="2"/><path d="M15 11c0-2-1.34-3.5-3-3.5"/></svg></div></div>
+            <div class="sc-trend trend-n">próx. sexta 14h</div>
+          </div>
+          <div class="stat-card">
+            <div class="sc-top"><div><div class="sc-val">18</div><div class="sc-lbl">Entradas no diário</div></div><div class="sc-icon" style="background:var(--a50)"><svg viewBox="0 0 16 16" stroke="var(--a600)" stroke-linecap="round"><rect x="2" y="2" width="12" height="12" rx="1.5"/><path d="M5 6h6M5 9h4"/></svg></div></div>
+            <div class="sc-trend trend-up">↑ 4 esta semana</div>
+          </div>
+          <div class="stat-card">
+            <div class="sc-top"><div><div class="sc-val">65%</div><div class="sc-lbl">Humor médio</div></div><div class="sc-icon" style="background:var(--g50)"><svg viewBox="0 0 16 16" stroke="var(--g600)" stroke-linecap="round"><circle cx="8" cy="8" r="6"/><path d="M5.5 9.5s1 1.5 2.5 1.5 2.5-1.5 2.5-1.5M6 6h.5M9.5 6h.5"/></svg></div></div>
+            <div class="sc-trend trend-up">↑ melhora de 12%</div>
+          </div>
+        </div>
+
+        <div class="g-main" style="margin-bottom:16px;">
+          <div class="card">
+            <div class="card-p" style="padding-bottom:8px;"><div class="card-h"><span class="card-label">Humor da semana</span><span class="card-action" onclick="window.location.href='diary.html'">ver diário →</span></div></div>
+            <div class="week-chart">
+              <div class="bars">
+                <div class="bar-col"><div class="bar-fill" style="height:36px;"></div><span class="bar-day">seg</span></div>
+                <div class="bar-col"><div class="bar-fill" style="height:54px;"></div><span class="bar-day">ter</span></div>
+                <div class="bar-col"><div class="bar-fill" style="height:26px;"></div><span class="bar-day">qua</span></div>
+                <div class="bar-col"><div class="bar-fill" style="height:68px;"></div><span class="bar-day">qui</span></div>
+                <div class="bar-col"><div class="bar-fill" style="height:42px;"></div><span class="bar-day">sex</span></div>
+                <div class="bar-col"><div class="bar-fill" style="height:52px;"></div><span class="bar-day">sáb</span></div>
+                <div class="bar-col"><div class="bar-fill today" style="height:48px;"></div><span class="bar-day" style="color:var(--b500);font-weight:600;">hoje</span></div>
+              </div>
+              <div class="divider" style="margin-bottom:10px;"></div>
+              <div style="display:flex;justify-content:space-between;font-size:12px;color:var(--s500);">
+                <span>Média: <strong style="color:var(--s800);">🙂 Bem</strong></span>
+                <span>7 registros consecutivos</span>
+              </div>
+            </div>
+          </div>
+          <div style="display:flex;flex-direction:column;gap:12px;">
+            <div class="next-sess-card">
+              <div class="nsc-label">Próxima sessão</div>
+              <div class="nsc-name">Dra. Camila Rocha</div>
+              <div class="nsc-meta">Sexta, 25 abr · 14h00 · Online</div>
+              <div class="nsc-actions">
+                <button class="nsc-btn w" onclick="window.location.href='chat.html'">
+  <svg viewBox="0 0 12 12"><path d="M1 1h10v7H7L5 10 3 8H1V1z" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  Chat
+</button>
+                <button class="nsc-btn g" onclick="window.location.href='sessions.html'">
+  <svg viewBox="0 0 12 12"><circle cx="6" cy="6" r="5"/><path d="M6 3.5v2.5l2 1.5" stroke-linecap="round"/></svg>
+  Ver sessões
+</button>
+              </div>
+            </div>
+            <div class="card card-p" style="flex:1;">
+              <div class="card-h" style="margin-bottom:10px;"><span class="card-label">Mensagens recentes</span><span class="card-action" onclick="window.location.href='chat.html'">abrir →</span></div>
+              <div style="background:var(--b50);border-radius:var(--rr);padding:10px 12px;margin-bottom:8px;cursor:pointer;" onclick="window.location.href='chat.html'">
+                <div style="font-size:11px;font-weight:600;color:var(--b700);margin-bottom:3px;">Dra. Camila Rocha</div>
+                <div style="font-size:12px;color:var(--s600);">Lembre de registrar como se sentiu após a sessão...</div>
+                <div style="font-size:10px;color:var(--s400);margin-top:4px;">há 2h</div>
+              </div>
+              <div style="background:var(--g50);border-radius:var(--rr);padding:10px 12px;cursor:pointer;" onclick="window.location.href='chat.html'">
+                <div style="font-size:11px;font-weight:600;color:var(--g700);margin-bottom:3px;">Clínica Bem-Estar</div>
+                <div style="font-size:12px;color:var(--s600);">Confirmação da sua sessão de sexta-feira.</div>
+                <div style="font-size:10px;color:var(--s400);margin-top:4px;">ontem</div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="g2" style="margin-bottom:16px;">
+          <div class="card card-p">
+            <div class="card-h"><span class="card-label">Artigo recomendado</span><span class="card-action" onclick="window.location.href='articles.html'">ver todos →</span></div>
+            <div style="background:linear-gradient(135deg,var(--b600),var(--p500));border-radius:var(--rl);padding:20px;margin-bottom:12px;cursor:pointer;" onclick="openArticle(0)">
+              <svg width="32" height="32" viewBox="0 0 32 32" style="opacity:.6;margin-bottom:10px;" fill="none"><path d="M16 4c-6.6 0-12 5.4-12 12 0 3 1.2 6 3 8L16 30l9-6c1.8-2 3-5 3-8 0-6.6-5.4-12-12-12z" stroke="#fff" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/><circle cx="16" cy="16" r="4" stroke="#fff" stroke-width="1.5"/></svg>
+              <div style="font-family:var(--fd);font-size:15px;color:#fff;line-height:1.4;margin-bottom:6px;">Como a respiração consciente regula o sistema nervoso</div>
+              <div style="font-size:11px;color:rgba(255,255,255,.6);">8 min de leitura · Ansiedade</div>
+            </div>
+            <div style="font-size:13px;color:var(--s600);line-height:1.65;">Aprenda como técnicas simples de respiração ativam o nervo vago e reduzem a resposta ao estresse...</div>
+          </div>
+          <div class="card card-p">
+            <div class="card-h"><span class="card-label">Atividade do dia</span><span class="card-action" onclick="window.location.href='activities.html'">ver todas →</span></div>
+            <div style="text-align:center;padding:12px 0;">
+              <div style="font-size:40px;margin-bottom:10px;">🌬️</div>
+              <div style="font-family:var(--fd);font-size:17px;color:var(--s900);margin-bottom:6px;">Respiração 4-7-8</div>
+              <div style="font-size:13px;color:var(--s500);margin-bottom:16px;">5 minutos para reduzir ansiedade e melhorar o foco</div>
+              <button class="btn btn-primary btn-full" onclick="openActivity('breath')">Iniciar atividade</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="card card-p">
+          <div class="card-h"><span class="card-label">Comunidade</span><span class="card-action" onclick="window.location.href='community.html'">ver tudo →</span></div>
+          <div style="display:flex;align-items:center;gap:8px;background:var(--g50);border-radius:var(--rr);padding:8px 12px;margin-bottom:12px;">
+            <div class="online-dot"></div><span style="font-size:12px;color:var(--g700);">Dra. Fernanda Lima está online como moderadora</span>
+          </div>
+          <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;">
+            <div style="padding:10px 12px;background:var(--s50);border-radius:var(--rr);cursor:pointer;" onclick="window.location.href='community.html'">
+              <div style="font-size:12px;font-weight:600;color:var(--s700);margin-bottom:3px;">Maria C.</div>
+              <div style="font-size:12px;color:var(--s500);">Consegui sair de casa... 💙</div>
+            </div>
+            <div style="padding:10px 12px;background:var(--s50);border-radius:var(--rr);cursor:pointer;" onclick="window.location.href='community.html'">
+              <div style="font-size:12px;font-weight:600;color:var(--s700);margin-bottom:3px;">João P.</div>
+              <div style="font-size:12px;color:var(--s500);">Dicas para insônia?</div>
+            </div>
+            <div style="padding:10px 12px;background:var(--s50);border-radius:var(--rr);cursor:pointer;" onclick="window.location.href='community.html'">
+              <div style="font-size:12px;font-weight:600;color:var(--s700);margin-bottom:3px;">Luísa S.</div>
+              <div style="font-size:12px;color:var(--s500);">6 meses de terapia...</div>
+            </div>
+          </div>
+        </div>
+  </div>
+</div>
+<!-- Breathing modal -->
+<div class="modal-bg" id="breath-modal">
+  <div class="modal-box act-modal">
+    <button class="modal-close" onclick="closeModal('breath-modal')">✕</button>
+    <div class="modal-title">Respiração 4-7-8</div>
+    <div class="modal-sub">Técnica poderosa para reduzir ansiedade imediatamente. Toque no círculo para começar.</div>
+    <div class="breath-circle" id="bm-circ" onclick="startBreathModal()"><span id="bm-txt">toque para iniciar</span></div>
+    <div class="breath-timer" id="bm-timer">0</div>
+    <div class="breath-phase" id="bm-phase">Inspire por 4 · segure por 7 · expire por 8</div>
+    <button class="btn btn-primary btn-full" onclick="startBreathModal()">Iniciar exercício</button>
+  </div>
+</div>
+<script src="app.js"></script>
+<script>(function(){var nl=document.getElementById('nav-home');if(nl)nl.classList.add('active');var tb=document.getElementById('page-title');if(tb)tb.textContent='Início';})();</script>
+
+<div class="toast" id="toast-el"></div>
+<div class="celebration-toast" id="celebration-toast"><span id="cel-emoji">🌸</span><span id="cel-msg"></span></div>
+</body>
+</html>

@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<title>MindMoor — Artigos</title>
+<style>/* ═══════════════════════════════════════
+   ARTICLES
+═══════════════════════════════════════ */
+.art-hero{
+  background:var(--s50);border:1px solid var(--s200);border-radius:var(--rxl);
+  overflow:hidden;margin-bottom:20px;display:flex;
+}
+.art-hero-img{
+  width:200px;flex-shrink:0;
+  background:linear-gradient(135deg,var(--b600),var(--p500));
+  display:flex;align-items:center;justify-content:center;
+}
+.art-hero-img svg{width:60px;height:60px;stroke:rgba(255,255,255,.6);stroke-width:1;fill:none;}
+.art-hero-body{padding:28px;flex:1;}
+.art-hero-tag{display:inline-block;margin-bottom:8px;}
+.art-hero-title{font-family:var(--fd);font-size:22px;color:var(--s900);margin-bottom:10px;line-height:1.4;}
+.art-hero-desc{font-size:13px;color:var(--s500);line-height:1.65;margin-bottom:16px;}
+
+.art-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:20px;}
+.art-card{
+  background:#fff;border:1px solid var(--s200);border-radius:var(--rl);
+  overflow:hidden;cursor:pointer;transition:all .15s;box-shadow:var(--sh1);
+}
+.art-card:hover{border-color:var(--b300);box-shadow:var(--sh2);transform:translateY(-2px);}
+.art-card-img{height:100px;display:flex;align-items:center;justify-content:center;}
+.art-card-body{padding:14px 16px;}
+.art-card-tag{margin-bottom:7px;}
+.art-card-title{font-family:var(--fd);font-size:15px;color:var(--s900);margin-bottom:6px;line-height:1.4;}
+.art-card-desc{font-size:12px;color:var(--s500);line-height:1.5;margin-bottom:10px;}
+.art-card-meta{display:flex;align-items:center;justify-content:space-between;font-size:11px;color:var(--s400);}
+
+/* Article detail overlay */
+.art-detail{
+  position:fixed;inset:0;background:rgba(15,23,42,.6);
+  display:none;align-items:flex-start;justify-content:center;
+  z-index:300;padding:40px 20px;overflow-y:auto;backdrop-filter:blur(3px);
+}
+.art-detail.open{display:flex;}
+.art-detail-box{
+  background:#fff;border-radius:var(--rxl);width:680px;max-width:100%;
+  box-shadow:var(--sh3);animation:fadeUp .2s ease;
+}
+.art-detail-header{height:160px;border-radius:var(--rxl) var(--rxl) 0 0;display:flex;align-items:center;justify-content:center;position:relative;}
+.art-detail-header svg{width:70px;height:70px;stroke:rgba(255,255,255,.7);stroke-width:1;fill:none;}
+.art-detail-close{position:absolute;top:14px;right:14px;width:30px;height:30px;border-radius:50%;background:rgba(255,255,255,.2);border:none;cursor:pointer;color:#fff;font-size:16px;display:flex;align-items:center;justify-content:center;}
+.art-detail-close:hover{background:rgba(255,255,255,.35);}
+.art-detail-body{padding:28px 32px;}
+.art-detail-tag{margin-bottom:10px;}
+.art-detail-title{font-family:var(--fd);font-size:24px;color:var(--s900);margin-bottom:14px;line-height:1.35;}
+.art-detail-text{font-size:14px;color:var(--s600);line-height:1.8;}
+.art-detail-text p{margin-bottom:14px;}
+.art-detail-text h3{font-family:var(--fd);font-size:17px;color:var(--s900);margin:20px 0 8px;}
+
+</style>
+</head>
+<body>
+<nav class="sidebar">
+    <div class="sb-logo">
+      <div class="sb-logo-row">
+        <div class="sb-logo-icon"><svg viewBox="0 0 20 20"><path d="M10 4c-3.3 0-6 2.7-6 6 0 1.5.6 3 1.5 4L10 17l4.5-3C15.4 13 16 11.5 16 10c0-3.3-2.7-6-6-6z" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="10" r="2"/></svg></div>
+        <div><div class="sb-logo-name">MindMoor</div><div class="sb-logo-clinic">Clínica Bem-Estar SP</div></div>
+      </div>
+    </div>
+
+    <div class="sb-user" onclick="window.location.href='profile.html'">
+      <div class="sb-avatar">AP</div>
+      <div><div class="sb-user-name">Ana Paula</div><div class="sb-user-sub">Paciente · Premium</div></div>
+    </div>
+
+    <div class="sb-nav">
+      <div class="sb-section">Principal</div>
+      <button class="sb-link active" id="nav-home" onclick="window.location.href='home.html'">
+        <svg viewBox="0 0 16 16"><path d="M2 6.5L8 2l6 4.5V14a.5.5 0 01-.5.5H3a.5.5 0 01-.5-.5V6.5z" stroke-linecap="round" stroke-linejoin="round"/></svg>Início
+      </button>
+      <button class="sb-link" id="nav-diary" onclick="window.location.href='diary.html'">
+        <svg viewBox="0 0 16 16"><rect x="2" y="1.5" width="12" height="13" rx="1.5"/><path d="M5 6h6M5 9h4" stroke-linecap="round"/></svg>Diário
+      </button>
+      <button class="sb-link" id="nav-sessions" onclick="window.location.href='sessions.html'">
+        <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><path d="M8 5v3l2.5 2" stroke-linecap="round"/></svg>Sessões
+      </button>
+      <button class="sb-link" id="nav-chat" onclick="window.location.href='chat.html'">
+        <svg viewBox="0 0 16 16"><path d="M2 2h12v9H9l-2 2.5L5 11H2V2z" stroke-linecap="round" stroke-linejoin="round"/></svg>Conversa
+        <span class="cnt">2</span>
+      </button>
+
+      <div class="sb-section">Conteúdo</div>
+      <button class="sb-link" id="nav-articles" onclick="window.location.href='articles.html'">
+        <svg viewBox="0 0 16 16"><path d="M3 3h10M3 6h10M3 9h7M3 12h5" stroke-linecap="round"/></svg>Artigos
+      </button>
+      <button class="sb-link" id="nav-activities" onclick="window.location.href='activities.html'">
+        <svg viewBox="0 0 16 16"><circle cx="8" cy="8" r="6"/><path d="M5.5 8l2 2 3-3" stroke-linecap="round" stroke-linejoin="round"/></svg>Atividades
+      </button>
+      <button class="sb-link" id="nav-community" onclick="window.location.href='community.html'">
+        <svg viewBox="0 0 16 16"><circle cx="6" cy="5.5" r="2.5"/><path d="M1 14c0-2.76 2.24-5 5-5s5 2.24 5 5" stroke-linecap="round"/><circle cx="12" cy="4" r="2"/><path d="M15 12c0-2-1.34-3.5-3-3.5" stroke-linecap="round"/></svg>Comunidade
+        <span class="cnt">3</span>
+      </button>
+
+      <div class="sb-section">Saúde</div>
+      <button class="sb-link" id="nav-medications" onclick="window.location.href='medications.html'">
+        <svg viewBox="0 0 16 16"><rect x="5" y="2" width="6" height="12" rx="3" stroke-linecap="round" stroke-linejoin="round"/><path d="M5 8h6" stroke-linecap="round"/></svg>Medicações
+      </button>
+      <button class="sb-link" id="nav-milestones" onclick="window.location.href='milestones.html'">
+        <svg viewBox="0 0 16 16"><path d="M8 2l1.6 4.2H14l-3.6 2.6 1.4 4.2L8 10.6 4.2 13l1.4-4.2L2 6.2h4.4z" stroke-linecap="round" stroke-linejoin="round"/></svg>Conquistas
+      </button>
+      <div class="sb-section">Conta</div>
+      <button class="sb-link" id="nav-profile" onclick="window.location.href='profile.html'">
+        <svg viewBox="0 0 16 16"><circle cx="8" cy="5" r="3"/><path d="M2 14c0-3.31 2.69-6 6-6s6 2.69 6 6" stroke-linecap="round"/></svg>Perfil
+      </button>
+    </div>
+
+    <div class="sb-emergency" onclick="window.location.href='emergency.html'">
+      <div class="sb-em-top"><div class="sb-em-dot"></div><span class="sb-em-title">Preciso de apoio agora</span></div>
+      <div class="sb-em-sub">Recursos imediatos · 1 clique</div>
+    </div>
+  </nav>
+<div class="main-wrap">
+  <div class="topbar">
+      <span class="tb-title" id="page-title">Início</span>
+      <div class="tb-right">
+        <button class="tb-btn" onclick="openModal('breath-modal')">
+          <svg viewBox="0 0 14 14" stroke-linecap="round"><circle cx="7" cy="7" r="5.5"/><path d="M7 4.5v2.5l1.5 1.5"/></svg>
+          Respiração
+        </button>
+        <button class="tb-btn primary" onclick="window.location.href='sessions.html'">
+          <svg viewBox="0 0 14 14" stroke-linecap="round"><path d="M7 2v10M2 7h10"/></svg>
+          Nova sessão
+        </button>
+        <button class="tb-btn" onclick="window.location.href='profile.html'" style="padding:6px 10px;">
+          <div style="width:24px;height:24px;border-radius:50%;background:var(--b50);display:flex;align-items:center;justify-content:center;font-size:10px;font-weight:700;color:var(--b700);">AP</div>
+        </button>
+      </div>
+    </div>
+  <div class="content" style="overflow-y:auto;">
+<div class="pg-head"><div class="pg-title">Artigos</div><div class="pg-sub">Conteúdo selecionado pela sua clínica para apoiar sua jornada.</div></div>
+        <div class="art-hero">
+          <div class="art-hero-img"><svg viewBox="0 0 60 60"><path d="M30 10c-11 0-20 9-20 20 0 5 2 10 5 13.3L30 50l15-6.7C48 40 50 35 50 30c0-11-9-20-20-20z" stroke-linecap="round" stroke-linejoin="round"/><circle cx="30" cy="30" r="8"/></svg></div>
+          <div class="art-hero-body">
+            <span class="badge badge-blue art-hero-tag">Em destaque</span>
+            <div class="art-hero-title">Como a respiração consciente regula o sistema nervoso e reduz a ansiedade</div>
+            <div class="art-hero-desc">Aprenda como técnicas simples de respiração ativam o nervo vago, equilibrando o sistema nervoso autônomo e reduzindo a resposta ao estresse em minutos.</div>
+            <button class="btn btn-dark btn-sm" onclick="openArticle(0)">Ler artigo →</button>
+          </div>
+        </div>
+        <div style="display:flex;gap:8px;margin-bottom:16px;">
+          <span class="topic-chip active" onclick="filterChip(this)">Todos</span>
+          <span class="topic-chip" onclick="filterChip(this)">Ansiedade</span>
+          <span class="topic-chip" onclick="filterChip(this)">Sono</span>
+          <span class="topic-chip" onclick="filterChip(this)">Autoestima</span>
+          <span class="topic-chip" onclick="filterChip(this)">Relacionamentos</span>
+          <span class="topic-chip" onclick="filterChip(this)">Trabalho</span>
+          <span class="topic-chip" onclick="filterChip(this)">Trauma</span>
+        </div>
+        <div class="art-grid">
+          <div class="art-card" onclick="openArticle(0)">
+            <div class="art-card-img" style="background:linear-gradient(135deg,var(--b500),var(--p500));"><svg width="40" height="40" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="20" r="15" stroke="rgba(255,255,255,.6)" stroke-width="1.5"/><path d="M20 12v8l5 4" stroke="rgba(255,255,255,.8)" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+            <div class="art-card-body">
+              <div class="art-card-tag"><span class="badge badge-blue">Ansiedade</span></div>
+              <div class="art-card-title">Respiração consciente e o sistema nervoso</div>
+              <div class="art-card-desc">Como o nervo vago e a respiração diafragmática reduzem a ansiedade imediatamente.</div>
+              <div class="art-card-meta"><span>8 min</span><span>Dra. Camila R.</span></div>
+            </div>
+          </div>
+          <div class="art-card" onclick="openArticle(1)">
+            <div class="art-card-img" style="background:linear-gradient(135deg,var(--t500),var(--g500));"><svg width="40" height="40" viewBox="0 0 40 40" fill="none"><path d="M20 8l3.5 9.2H32l-7.6 5.5 2.9 9-7.3-5.3-7.3 5.3 2.9-9L8 17.2h8.5z" stroke="rgba(255,255,255,.8)" stroke-width="1.5" stroke-linejoin="round"/></svg></div>
+            <div class="art-card-body">
+              <div class="art-card-tag"><span class="badge badge-teal">Autoestima</span></div>
+              <div class="art-card-title">Autocompaixão: o antídoto para a autocrítica excessiva</div>
+              <div class="art-card-desc">Entenda por que se tratar com gentileza é fundamental para a saúde mental.</div>
+              <div class="art-card-meta"><span>6 min</span><span>Dra. Fernanda L.</span></div>
+            </div>
+          </div>
+          <div class="art-card" onclick="openArticle(2)">
+            <div class="art-card-img" style="background:linear-gradient(135deg,var(--a500),var(--r500));"><svg width="40" height="40" viewBox="0 0 40 40" fill="none"><path d="M20 8c-6.6 0-12 5.4-12 12 0 3 1.2 6 3 8L20 36l9-8c1.8-2 3-5 3-8 0-6.6-5.4-12-12-12z" stroke="rgba(255,255,255,.7)" stroke-width="1.5"/><circle cx="20" cy="20" r="5" stroke="rgba(255,255,255,.8)" stroke-width="1.5"/></svg></div>
+            <div class="art-card-body">
+              <div class="art-card-tag"><span class="badge badge-amber">Relacionamentos</span></div>
+              <div class="art-card-title">Comunicação não-violenta nos vínculos afetivos</div>
+              <div class="art-card-desc">Como expressar necessidades sem acusações e criar conexões mais seguras.</div>
+              <div class="art-card-meta"><span>10 min</span><span>Dr. Paulo S.</span></div>
+            </div>
+          </div>
+          <div class="art-card" onclick="openArticle(3)">
+            <div class="art-card-img" style="background:linear-gradient(135deg,var(--s700),var(--s500));"><svg width="40" height="40" viewBox="0 0 40 40" fill="none"><rect x="10" y="8" width="20" height="24" rx="3" stroke="rgba(255,255,255,.7)" stroke-width="1.5"/><path d="M15 16h10M15 20h10M15 24h7" stroke="rgba(255,255,255,.7)" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+            <div class="art-card-body">
+              <div class="art-card-tag"><span class="badge badge-purple">Trabalho</span></div>
+              <div class="art-card-title">Síndrome de burnout: identificar, tratar e prevenir</div>
+              <div class="art-card-desc">Sinais de alerta, estratégias de recuperação e como criar limites saudáveis.</div>
+              <div class="art-card-meta"><span>12 min</span><span>Dra. Camila R.</span></div>
+            </div>
+          </div>
+          <div class="art-card" onclick="openArticle(4)">
+            <div class="art-card-img" style="background:linear-gradient(135deg,var(--b700),var(--t600));"><svg width="40" height="40" viewBox="0 0 40 40" fill="none"><circle cx="20" cy="18" r="10" stroke="rgba(255,255,255,.7)" stroke-width="1.5"/><path d="M13 32c0-3.9 3.1-7 7-7s7 3.1 7 7" stroke="rgba(255,255,255,.7)" stroke-width="1.5" stroke-linecap="round"/></svg></div>
+            <div class="art-card-body">
+              <div class="art-card-tag"><span class="badge badge-blue">Sono</span></div>
+              <div class="art-card-title">Higiene do sono: como criar rituais que realmente funcionam</div>
+              <div class="art-card-desc">Estratégias baseadas em evidências para dormir melhor e acordar com mais energia.</div>
+              <div class="art-card-meta"><span>7 min</span><span>Dra. Fernanda L.</span></div>
+            </div>
+          </div>
+          <div class="art-card" onclick="openArticle(5)">
+            <div class="art-card-img" style="background:linear-gradient(135deg,var(--p500),var(--r500));"><svg width="40" height="40" viewBox="0 0 40 40" fill="none"><path d="M20 10v20M10 20h20" stroke="rgba(255,255,255,.7)" stroke-width="2" stroke-linecap="round"/><circle cx="20" cy="20" r="14" stroke="rgba(255,255,255,.4)" stroke-width="1.5"/></svg></div>
+            <div class="art-card-body">
+              <div class="art-card-tag"><span class="badge badge-red">Trauma</span></div>
+              <div class="art-card-title">O corpo guarda o trauma: entendendo respostas somáticas</div>
+              <div class="art-card-desc">Por que o trauma fica no corpo e como a terapia somática ajuda no processamento.</div>
+              <div class="art-card-meta"><span>14 min</span><span>Dr. Paulo S.</span></div>
+            </div>
+          </div>
+        </div>
+  </div>
+</div>
+<!-- Article detail -->
+<div class="art-detail" id="art-detail-overlay">
+  <div class="art-detail-box">
+    <div class="art-detail-header" id="art-detail-header">
+      <svg width="70" height="70" viewBox="0 0 70 70" fill="none"><circle cx="35" cy="35" r="28" stroke="rgba(255,255,255,.6)" stroke-width="1.5"/></svg>
+      <button class="art-detail-close" onclick="closeArticle()">✕</button>
+    </div>
+    <div class="art-detail-body" id="art-detail-body"></div>
+  </div>
+</div>
+<script src="app.js"></script>
+<script>(function(){var nl=document.getElementById('nav-articles');if(nl)nl.classList.add('active');var tb=document.getElementById('page-title');if(tb)tb.textContent='Artigos';})();</script>
+
+<div class="toast" id="toast-el"></div>
+<div class="celebration-toast" id="celebration-toast"><span id="cel-emoji">🌸</span><span id="cel-msg"></span></div>
+</body>
+</html>

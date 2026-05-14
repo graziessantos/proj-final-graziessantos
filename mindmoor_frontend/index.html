@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<link href="https://fonts.googleapis.com/css2?family=Lora:ital,wght@0,400;0,500;0,600;1,400;1,500&family=Plus+Jakarta+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="shared.css">
+<title>MindMoor — Entrar</title>
+<style>/* ═══════════════════════════════════════
+   AUTH SCREENS
+═══════════════════════════════════════ */
+#auth-wrap{
+  min-height:100vh;display:flex;align-items:stretch;
+}
+.auth-left{
+  width:420px;flex-shrink:0;background:#fff;
+  display:flex;flex-direction:column;
+  padding:48px 48px 32px;
+  border-right:1px solid var(--s200);
+  position:relative;overflow:hidden;
+}
+.auth-left::before{
+  content:'';position:absolute;bottom:-80px;left:-80px;
+  width:300px;height:300px;border-radius:50%;
+  background:radial-gradient(circle,var(--b50) 0%,transparent 70%);
+  pointer-events:none;
+}
+.auth-right{
+  flex:1;background:linear-gradient(135deg,var(--s900) 0%,var(--b800) 50%,var(--s800) 100%);
+  display:flex;flex-direction:column;align-items:center;justify-content:center;
+  padding:48px;position:relative;overflow:hidden;
+}
+.auth-right::before{
+  content:'';position:absolute;inset:0;
+  background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none' fill-rule='evenodd'%3E%3Cg fill='%23ffffff' fill-opacity='0.03'%3E%3Ccircle cx='30' cy='30' r='20'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+}
+.auth-right-content{position:relative;z-index:1;text-align:center;max-width:380px;}
+.auth-quote{
+  font-family:var(--fd);font-size:28px;color:#fff;line-height:1.4;
+  margin-bottom:20px;font-style:italic;
+}
+.auth-quote-sub{font-size:14px;color:rgba(255,255,255,.5);}
+
+.auth-logo{display:flex;align-items:center;gap:10px;margin-bottom:48px;}
+.auth-logo-icon{
+  width:36px;height:36px;border-radius:10px;background:var(--b600);
+  display:flex;align-items:center;justify-content:center;
+}
+.auth-logo-icon svg{width:20px;height:20px;stroke:#fff;stroke-width:1.8;fill:none;}
+.auth-logo-name{font-family:var(--fd);font-size:20px;color:var(--s900);}
+.auth-logo-tag{font-size:10px;color:var(--s400);letter-spacing:.06em;text-transform:uppercase;margin-top:1px;}
+
+.auth-screen{display:none;}
+.auth-screen.active{display:block;}
+
+.auth-h{font-family:var(--fd);font-size:26px;color:var(--s900);margin-bottom:6px;}
+.auth-sub{font-size:13px;color:var(--s500);line-height:1.6;margin-bottom:32px;}
+
+.form-group{margin-bottom:16px;}
+.form-label{font-size:12px;font-weight:600;color:var(--s600);letter-spacing:.04em;text-transform:uppercase;margin-bottom:6px;display:block;}
+.form-input{
+  width:100%;padding:11px 14px;border:1px solid var(--s200);border-radius:var(--rm);
+  font-size:14px;color:var(--s800);outline:none;transition:border-color .15s,box-shadow .15s;
+  background:#fff;
+}
+.form-input:focus{border-color:var(--b400);box-shadow:0 0 0 3px rgba(59,130,246,.1);}
+.form-input::placeholder{color:var(--s400);}
+
+.code-input-row{display:flex;gap:8px;}
+.code-digit{
+  width:48px;height:56px;border:2px solid var(--s200);border-radius:var(--rm);
+  text-align:center;font-size:22px;font-weight:600;color:var(--s900);outline:none;
+  transition:border-color .15s;
+}
+.code-digit:focus{border-color:var(--b500);}
+
+.btn-auth{
+  width:100%;padding:13px;background:var(--s900);color:#fff;border:none;
+  border-radius:var(--rm);font-size:14px;font-weight:600;cursor:pointer;
+  transition:all .15s;margin-top:8px;letter-spacing:.01em;
+}
+.btn-auth:hover{background:var(--s700);}
+.btn-auth:active{transform:scale(.99);}
+.btn-auth.blue{background:var(--b600);}
+.btn-auth.blue:hover{background:var(--b700);}
+
+.auth-link{text-align:center;font-size:13px;color:var(--s400);margin-top:16px;}
+.auth-link span{color:var(--b600);cursor:pointer;font-weight:500;}
+.auth-link span:hover{color:var(--b700);}
+
+.code-hint{
+  background:var(--b50);border:1px solid var(--b200);border-radius:var(--rm);
+  padding:12px 14px;font-size:12px;color:var(--b700);margin-bottom:20px;
+  display:flex;gap:8px;align-items:flex-start;
+}
+.code-hint svg{width:14px;height:14px;stroke:var(--b600);stroke-width:1.8;fill:none;flex-shrink:0;margin-top:1px;}
+
+.form-row-2{display:grid;grid-template-columns:1fr 1fr;gap:12px;}
+
+.step-dots{display:flex;gap:6px;margin-bottom:28px;}
+.step-dot{width:6px;height:6px;border-radius:3px;background:var(--s200);transition:all .2s;}
+.step-dot.active{width:20px;background:var(--b500);}
+.step-dot.done{background:var(--g500);}
+
+</style>
+</head>
+<body style="display:block;min-height:100vh;">
+<div id="auth-wrap">
+  <div class="auth-left">
+    <div class="auth-logo">
+      <div class="auth-logo-icon">
+        <svg viewBox="0 0 20 20"><path d="M10 4c-3.3 0-6 2.7-6 6 0 1.5.6 3 1.5 4L10 17l4.5-3C15.4 13 16 11.5 16 10c0-3.3-2.7-6-6-6z" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="10" r="2"/></svg>
+      </div>
+      <div>
+        <div class="auth-logo-name">MindMoor</div>
+        <div class="auth-logo-tag">Plataforma Clínica</div>
+      </div>
+    </div>
+
+    <!-- TELA 1: CÓDIGO CLÍNICO -->
+    <div id="auth-code" class="auth-screen active">
+      <h2 class="auth-h">Bem-vindo</h2>
+      <p class="auth-sub">Este aplicativo é de uso exclusivo para pacientes de clínicas parceiras. Insira o código fornecido pelo seu profissional de saúde para continuar.</p>
+      <div class="code-hint">
+        <svg viewBox="0 0 14 14"><circle cx="7" cy="7" r="6"/><path d="M7 5v3M7 9.5v.5" stroke-linecap="round"/></svg>
+        Você receberá este código diretamente do seu psicólogo ou clínica. Sem código, não é possível criar uma conta.
+      </div>
+      <div class="form-group">
+        <label class="form-label">Código de acesso (6 dígitos)</label>
+        <div class="code-input-row" id="code-digits">
+          <input class="code-digit" maxlength="1" type="text" oninput="codeNext(this,0)" onkeydown="codeBack(event,this,0)">
+          <input class="code-digit" maxlength="1" type="text" oninput="codeNext(this,1)" onkeydown="codeBack(event,this,1)">
+          <input class="code-digit" maxlength="1" type="text" oninput="codeNext(this,2)" onkeydown="codeBack(event,this,2)">
+          <input class="code-digit" maxlength="1" type="text" oninput="codeNext(this,3)" onkeydown="codeBack(event,this,3)">
+          <input class="code-digit" maxlength="1" type="text" oninput="codeNext(this,4)" onkeydown="codeBack(event,this,4)">
+          <input class="code-digit" maxlength="1" type="text" oninput="codeNext(this,5)" onkeydown="codeBack(event,this,5)">
+        </div>
+        <div style="font-size:11px;color:var(--s400);margin-top:6px;">Dica: use o código <strong>MM2025</strong> para demonstração</div>
+      </div>
+      <button class="btn-auth" onclick="validateCode()">Verificar código →</button>
+      <div class="auth-link">Já tem conta? <span onclick="showAuth('auth-login')">Entrar aqui</span></div>
+    </div>
+
+    <!-- TELA 2: CADASTRO -->
+    <div id="auth-register" class="auth-screen">
+      <div class="step-dots">
+        <div class="step-dot active" id="sd1"></div>
+        <div class="step-dot" id="sd2"></div>
+        <div class="step-dot" id="sd3"></div>
+      </div>
+      <h2 class="auth-h" id="reg-title">Criar sua conta</h2>
+      <p class="auth-sub" id="reg-sub">Código verificado com sucesso. Agora crie seu acesso pessoal.</p>
+
+      <div id="reg-step1">
+        <div class="form-row-2">
+          <div class="form-group"><label class="form-label">Nome</label><input class="form-input" placeholder="Ana" id="reg-fname"></div>
+          <div class="form-group"><label class="form-label">Sobrenome</label><input class="form-input" placeholder="Paula" id="reg-lname"></div>
+        </div>
+        <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" placeholder="ana@email.com" id="reg-email"></div>
+        <div class="form-group"><label class="form-label">Senha</label><input class="form-input" type="password" placeholder="Mínimo 8 caracteres" id="reg-pass"></div>
+        <button class="btn-auth blue" onclick="regNext(2)">Continuar →</button>
+      </div>
+
+      <div id="reg-step2" style="display:none;">
+        <div class="form-group"><label class="form-label">Data de nascimento</label><input class="form-input" type="date" id="reg-bdate"></div>
+        <div class="form-group">
+          <label class="form-label">Como prefere ser chamado(a)?</label>
+          <input class="form-input" placeholder="Apelido ou nome preferido" id="reg-pref">
+        </div>
+        <div class="form-group">
+          <label class="form-label">Gênero (opcional)</label>
+          <select class="form-input" style="cursor:pointer;">
+            <option value="">Prefiro não informar</option>
+            <option>Feminino</option><option>Masculino</option><option>Não binário</option><option>Outro</option>
+          </select>
+        </div>
+        <button class="btn-auth blue" onclick="regNext(3)">Continuar →</button>
+        <button class="btn-auth" style="background:transparent;color:var(--s500);border:1px solid var(--s200);margin-top:6px;" onclick="regNext(1)">← Voltar</button>
+      </div>
+
+      <div id="reg-step3" style="display:none;">
+        <p style="font-size:13px;color:var(--s600);line-height:1.7;margin-bottom:16px;">Antes de começar, precisamos que você leia e concorde com nossos termos. Este app é um <strong>complemento à sua terapia</strong>, não um substituto para cuidados profissionais.</p>
+        <div style="background:var(--s50);border:1px solid var(--s200);border-radius:var(--rm);padding:14px;font-size:12px;color:var(--s500);line-height:1.7;margin-bottom:16px;max-height:120px;overflow-y:auto;">
+          <strong>Termos de Uso MindMoor:</strong><br>
+          • Seus dados são confidenciais e protegidos pela LGPD.<br>
+          • O conteúdo compartilhado pode ser acessado pelo seu profissional de saúde responsável.<br>
+          • Em situações de risco imediato, utilize sempre o número 188 (CVV) ou 192 (SAMU).<br>
+          • O app não substitui atendimento psicológico ou psiquiátrico presencial.<br>
+          • Você pode solicitar a exclusão dos seus dados a qualquer momento.
+        </div>
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:20px;">
+          <input type="checkbox" id="terms-cb" style="width:16px;height:16px;cursor:pointer;accent-color:var(--b600);">
+          <label for="terms-cb" style="font-size:13px;color:var(--s600);cursor:pointer;">Li e concordo com os Termos de Uso e Política de Privacidade</label>
+        </div>
+        <button class="btn-auth blue" onclick="finishRegister()">Criar minha conta ✓</button>
+        <button class="btn-auth" style="background:transparent;color:var(--s500);border:1px solid var(--s200);margin-top:6px;" onclick="regNext(2)">← Voltar</button>
+      </div>
+    </div>
+
+    <!-- TELA 3: LOGIN -->
+    <div id="auth-login" class="auth-screen">
+      <h2 class="auth-h">Entrar</h2>
+      <p class="auth-sub">Bem-vinda de volta. Continue de onde parou.</p>
+      <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" placeholder="seu@email.com" value="ana@email.com"></div>
+      <div class="form-group"><label class="form-label">Senha</label><input class="form-input" type="password" placeholder="Sua senha" value="••••••••"></div>
+      <div style="text-align:right;margin-bottom:16px;"><span style="font-size:12px;color:var(--b600);cursor:pointer;">Esqueceu a senha?</span></div>
+      <button class="btn-auth blue" onclick="window.location.href='home.html'">Entrar →</button>
+      <div class="auth-link">Novo por aqui? <span onclick="showAuth('auth-code')">Usar código de acesso</span></div>
+    </div>
+  </div>
+
+  <div class="auth-right">
+    <div class="auth-right-content">
+      <div style="font-size:48px;margin-bottom:20px;">🌱</div>
+      <div class="auth-quote">"O cuidado com a saúde mental é um ato de coragem e de amor próprio."</div>
+      <div class="auth-quote-sub">MindMoor · Plataforma exclusiva para pacientes de clínicas parceiras</div>
+      <div style="margin-top:40px;display:flex;gap:24px;justify-content:center;">
+        <div style="text-align:center;"><div style="font-family:var(--fd);font-size:22px;color:#fff;">12k+</div><div style="font-size:11px;color:rgba(255,255,255,.45);">pacientes ativos</div></div>
+        <div style="width:1px;background:rgba(255,255,255,.1);"></div>
+        <div style="text-align:center;"><div style="font-family:var(--fd);font-size:22px;color:#fff;">200+</div><div style="font-size:11px;color:rgba(255,255,255,.45);">clínicas parceiras</div></div>
+        <div style="width:1px;background:rgba(255,255,255,.1);"></div>
+        <div style="text-align:center;"><div style="font-family:var(--fd);font-size:22px;color:#fff;">98%</div><div style="font-size:11px;color:rgba(255,255,255,.45);">satisfação</div></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- ══════════════════════════════════════════
+     APP SHELL
+══════════════════════════════════════════ -->
+<div class="toast" id="toast-el"></div>
+<script src="app.js"></script>
+</body>
+</html>
