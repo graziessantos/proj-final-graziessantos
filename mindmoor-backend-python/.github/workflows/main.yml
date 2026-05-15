@@ -1,5 +1,5 @@
 name: Teste de Conexao
-on: [push] # Dispara sempre que você enviar código
+on: [push]
 
 jobs:
   verificar-arquivos:
