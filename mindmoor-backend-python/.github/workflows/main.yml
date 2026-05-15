@@ -1,0 +1,12 @@
+name: Teste de Conexao
+on: [push] # Dispara sempre que você enviar código
+
+jobs:
+  verificar-arquivos:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Clonar o repo
+        uses: actions/checkout@v4
+
+      - name: Mostrar arquivos
+        run: ls -la
