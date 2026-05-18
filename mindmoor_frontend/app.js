@@ -63,10 +63,9 @@ async function finishRegister(){
       headers: { 'Content-Type': 'application/json' },
       body: JSON.stringify({ nome, email, senha })
     });
-
-    if(response.ok){
+      if(response.ok){
       toast('Conta criada! Bem-vinda 🌱');
-      setTimeout(() => window.location.href = 'home.html', 1000);
+      setTimeout(function(){ window.location.href = 'home.html'; }, 1500);
     } else {
       toast('Erro ao criar conta. Tente outro email.');
     }

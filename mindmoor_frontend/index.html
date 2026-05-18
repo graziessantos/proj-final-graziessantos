@@ -153,11 +153,11 @@
 
       <div id="reg-step1">
         <div class="form-row-2">
-          <div class="form-group"><label class="form-label">Nome</label><input class="form-input" placeholder="Ana" id="reg-fname"></div>
+          <div class="form-group"><label class="form-label">Nome</label><input class="form-input" placeholder="Ana" id="reg-name"></div>
           <div class="form-group"><label class="form-label">Sobrenome</label><input class="form-input" placeholder="Paula" id="reg-lname"></div>
         </div>
         <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" placeholder="ana@email.com" id="reg-email"></div>
-        <div class="form-group"><label class="form-label">Senha</label><input class="form-input" type="password" placeholder="Mínimo 8 caracteres" id="reg-pass"></div>
+        <div class="form-group"><label class="form-label">Senha</label><input class="form-input" type="password" placeholder="Mínimo 8 caracteres" id="reg-password"></div>
         <button class="btn-auth blue" onclick="regNext(2)">Continuar →</button>
       </div>
 
@@ -201,10 +201,10 @@
     <div id="auth-login" class="auth-screen">
       <h2 class="auth-h">Entrar</h2>
       <p class="auth-sub">Bem-vinda de volta. Continue de onde parou.</p>
-      <div class="form-group"><label class="form-label">Email</label><input class="form-input" type="email" placeholder="seu@email.com" value="ana@email.com"></div>
-      <div class="form-group"><label class="form-label">Senha</label><input class="form-input" type="password" placeholder="Sua senha" value="••••••••"></div>
+      <input class="form-input" type="email" placeholder="seu@email.com" id="login-email">
+      <input class="form-input" type="password" placeholder="Sua senha" id="login-password">
       <div style="text-align:right;margin-bottom:16px;"><span style="font-size:12px;color:var(--b600);cursor:pointer;">Esqueceu a senha?</span></div>
-      <button class="btn-auth blue" onclick="window.location.href='home.html'">Entrar →</button>
+      <button class="btn-auth blue" onclick="enterApp()">Entrar →</button>
       <div class="auth-link">Novo por aqui? <span onclick="showAuth('auth-code')">Usar código de acesso</span></div>
     </div>
   </div>
