@@ -1,0 +1,20 @@
+version: "3.8"
+
+services:
+  db:
+    image: postgres:15
+    environment:
+      POSTGRES_USER: mindmoor
+      POSTGRES_PASSWORD: mindmoor123
+      POSTGRES_DB: mindmoor
+    ports:
+      - "5432:5432"
+
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgresql://mindmoor:mindmoor123@db/mindmoor

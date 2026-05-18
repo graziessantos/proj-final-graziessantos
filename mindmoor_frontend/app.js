@@ -49,13 +49,53 @@ function regNext(step){
   const t=document.getElementById('reg-title');const s=document.getElementById('reg-sub');
   if(t)t.textContent=titles[step];if(s)s.textContent=subs[step];
 }
-function finishRegister(){
-  const cb=document.getElementById('terms-cb');
-  if(!cb||!cb.checked){toast('Aceite os termos para continuar.');return;}
-  toast('Conta criada! Bem-vinda 🌱');
-  setTimeout(()=>window.location.href='home.html',1000);
+async function finishRegister(){
+  const cb = document.getElementById('terms-cb');
+  if(!cb || !cb.checked){ toast('Aceite os termos para continuar.'); return; }
+
+  const nome = document.getElementById('reg-name').value;
+  const email = document.getElementById('reg-email').value;
+  const senha = document.getElementById('reg-password').value;
+
+  try {
+    const response = await fetch('http://127.0.0.1:8000/auth/register', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ nome, email, senha })
+    });
+
+    if(response.ok){
+      toast('Conta criada! Bem-vinda 🌱');
+      setTimeout(() => window.location.href = 'home.html', 1000);
+    } else {
+      toast('Erro ao criar conta. Tente outro email.');
+    }
+  } catch(e) {
+    toast('Erro ao conectar com o servidor.');
+  }
 }
-function enterApp(){ window.location.href='home.html'; }
+async function enterApp(){
+  const email = document.getElementById('login-email').value;
+  const senha = document.getElementById('login-password').value;
+
+  try {
+    const response = await fetch('http://127.0.0.1:8000/auth/login', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ email, senha })
+    });
+
+    if(response.ok){
+      const data = await response.json();
+      localStorage.setItem('token', data.access_token);
+      window.location.href = 'home.html';
+    } else {
+      toast('Email ou senha incorretos!');
+    }
+  } catch(e) {
+    toast('Erro ao conectar com o servidor.');
+  }
+}
 function logout(){ if(confirm('Deseja sair da sua conta?')) window.location.href='index.html'; }
 
 /* ══ SIDEBAR ACTIVE STATE ══ */
@@ -74,15 +114,38 @@ function selMcDiary(el){el.closest('.card').querySelectorAll('.mc').forEach(c=>c
 function saveMoodDash(){const n=document.getElementById('mood-note');toast('Humor registrado!'+(n&&n.value?' 📝':''));if(n)n.value='';}
 
 /* ══ DIARY ══ */
-function saveDiaryEntry(){
-  const ta=document.getElementById('diary-ta');
-  if(!ta||!ta.value.trim()){toast('Escreva algo primeiro...');return;}
-  const sel=document.querySelector('.mc.sel span');
-  const emoji=sel?sel.textContent:'😐';
-  const e=document.createElement('div');e.className='diary-entry';
-  e.innerHTML=`<div class="de-top"><span class="de-emoji">${emoji}</span><span class="de-date">Hoje</span></div><div class="de-text">${ta.value.trim()}</div>`;
-  const list=document.getElementById('diary-list');if(list)list.insertBefore(e,list.firstChild);
-  ta.value='';toast('Reflexão salva! 🌱');incrementMilestone('diary_entries');
+async function saveDiaryEntry(){
+  const ta = document.getElementById('diary-ta');
+  if(!ta || !ta.value.trim()){ toast('Escreva algo primeiro...'); return; }
+  const sel = document.querySelector('.mc.sel span');
+  const emoji = sel ? sel.textContent : '😐';
+
+  try {
+    const response = await fetch('http://127.0.0.1:8000/api/diary', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({
+        user_id: 1,
+        conteudo: ta.value.trim(),
+        humor: emoji
+      })
+    });
+
+    if(response.ok){
+      const e = document.createElement('div');
+      e.className = 'diary-entry';
+      e.innerHTML = `<div class="de-top"><span class="de-emoji">${emoji}</span><span class="de-date">Hoje</span></div><div class="de-text">${ta.value.trim()}</div>`;
+      const list = document.getElementById('diary-list');
+      if(list) list.insertBefore(e, list.firstChild);
+      ta.value = '';
+      toast('Reflexão salva! 🌱');
+      incrementMilestone('diary_entries');
+    } else {
+      toast('Erro ao salvar. Tente novamente.');
+    }
+  } catch(e) {
+    toast('Erro ao conectar com o servidor.');
+  }
 }
 
 /* ══ COMMUNITY ══ */
