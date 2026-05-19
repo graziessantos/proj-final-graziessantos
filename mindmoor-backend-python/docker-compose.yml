@@ -18,3 +18,4 @@ services:
       - db
     environment:
       DATABASE_URL: postgresql://mindmoor:mindmoor123@db/mindmoor
+    restart: on-failure
