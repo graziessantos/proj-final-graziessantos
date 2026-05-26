@@ -1,4 +1,4 @@
-from datetime import datetime
+from datetime import datetime, timezone
 from sqlalchemy import Column, Integer, String, DateTime, Boolean, ForeignKey
 from sqlalchemy.orm import declarative_base
 
@@ -11,14 +11,14 @@ class User(Base):
     nome = Column(String, nullable=False)
     email = Column(String, unique=True, nullable=False)
     senha = Column(String, nullable=False)
-    data_cadastro = Column(DateTime, default=datetime.utcnow)
+    data_cadastro = Column(DateTime, default=lambda: datetime.now(timezone.utc))
 
 class DiaryEntry(Base):
     __tablename__ = "diary_entries"
 
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
-    date = Column(DateTime, default=datetime.utcnow)
+    date = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     conteudo = Column(String, nullable=False)
     humor = Column(String, nullable=False)
 
@@ -37,7 +37,7 @@ class TherapySession(Base):
 
     id = Column(Integer, primary_key=True, index=True)
     user_id = Column(Integer, ForeignKey("users.id"))
-    data = Column(DateTime, default=datetime.utcnow)
+    data = Column(DateTime, default=lambda: datetime.now(timezone.utc))
     nome_terapeuta = Column(String, nullable=False)
     anotacoes = Column(String, nullable=False)
 

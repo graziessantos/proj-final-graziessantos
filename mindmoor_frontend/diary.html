@@ -17,6 +17,17 @@
 .de-date{font-size:12px;color:var(--s400);}
 .de-text{font-size:13px;color:var(--s600);line-height:1.55;}
 
+.edit-modal{display:none;position:fixed;inset:0;background:rgba(0,0,0,.4);z-index:999;align-items:center;justify-content:center;}
+.edit-modal.open{display:flex;}
+.edit-box{background:#fff;border-radius:16px;padding:28px;width:420px;box-shadow:0 20px 60px rgba(0,0,0,.15);}
+.edit-box h3{font-family:var(--fd);font-size:18px;color:var(--s900);margin-bottom:16px;}
+.edit-box textarea{width:100%;min-height:100px;padding:10px 14px;border:1px solid var(--s200);border-radius:10px;font-size:14px;resize:none;outline:none;}
+.edit-box textarea:focus{border-color:var(--b400);}
+.edit-actions{display:flex;gap:8px;margin-top:14px;justify-content:flex-end;}
+.edit-actions button{padding:9px 20px;border-radius:8px;font-size:13px;font-weight:600;cursor:pointer;border:none;}
+.edit-cancel{background:var(--s100);color:var(--s600);}
+.edit-save{background:var(--b600);color:#fff;}
+
 </style>
 </head>
 <body>
@@ -135,7 +146,26 @@
 </div>
 
 <script src="app.js"></script>
-<script>(function(){var nl=document.getElementById('nav-diary');if(nl)nl.classList.add('active');var tb=document.getElementById('page-title');if(tb)tb.textContent='Diário';})();</script>
+<script>
+  (function(){
+    var nl=document.getElementById('nav-diary');
+    if(nl)nl.classList.add('active');
+    var tb=document.getElementById('page-title');
+    if(tb)tb.textContent='Diário';
+  })();
+  loadDiaryEntries();
+</script>
+
+<div class="edit-modal" id="edit-modal">
+  <div class="edit-box">
+    <h3>✏️ Editar entrada</h3>
+    <textarea id="edit-ta"></textarea>
+    <div class="edit-actions">
+      <button class="edit-cancel" onclick="closeEditModal()">Cancelar</button>
+      <button class="edit-save" onclick="confirmEdit()">Salvar</button>
+    </div>
+  </div>
+</div>
 
 <div class="toast" id="toast-el"></div>
 <div class="celebration-toast" id="celebration-toast"><span id="cel-emoji">🌸</span><span id="cel-msg"></span></div>

@@ -131,14 +131,10 @@ async function saveDiaryEntry(){
     });
 
     if(response.ok){
-      const e = document.createElement('div');
-      e.className = 'diary-entry';
-      e.innerHTML = `<div class="de-top"><span class="de-emoji">${emoji}</span><span class="de-date">Hoje</span></div><div class="de-text">${ta.value.trim()}</div>`;
-      const list = document.getElementById('diary-list');
-      if(list) list.insertBefore(e, list.firstChild);
       ta.value = '';
       toast('Reflexão salva! 🌱');
       incrementMilestone('diary_entries');
+      loadDiaryEntries();
     } else {
       toast('Erro ao salvar. Tente novamente.');
     }
@@ -371,3 +367,64 @@ document.addEventListener('DOMContentLoaded', function(){
     }
   });
 });
+
+async function loadDiaryEntries() {
+  const list = document.getElementById('diary-list');
+  if (!list) return;
+  const res = await fetch('http://127.0.0.1:8000/api/diary');
+  const entries = await res.json();
+  if (entries.length === 0) { list.innerHTML = '<p style="color:var(--s400);font-size:13px;">Nenhuma entrada ainda.</p>'; return; }
+  list.innerHTML = entries.map(e => `
+    <div class="diary-entry" id="entry-${e.id}">
+      <div class="de-top">
+        <span class="de-emoji">${humorEmoji(e.humor)}</span>
+        <span class="de-date">${new Date(e.date).toLocaleDateString('pt-BR')}</span>
+        <div style="margin-left:auto;display:flex;gap:6px;">
+          <button onclick="editDiary(${e.id},'${e.conteudo}','${e.humor}')" style="font-size:11px;padding:3px 8px;border:1px solid var(--s200);border-radius:6px;background:#fff;cursor:pointer;">Editar</button>
+          <button onclick="deleteDiary(${e.id})" style="font-size:11px;padding:3px 8px;border:1px solid #fca5a5;border-radius:6px;background:#fff;color:#dc2626;cursor:pointer;">Deletar</button>
+        </div>
+      </div>
+      <div class="de-text">${e.conteudo}</div>
+    </div>
+  `).join('');
+}
+
+function humorEmoji(humor) {
+  const map = { 'ótimo': '😊', 'bem': '🙂', 'neutro': '😐', 'baixo': '😕', 'mal': '😔' };
+  return map[humor] || '😐';
+}
+
+let editingId = null;
+let editingHumor = null;
+
+function editDiary(id, conteudo, humor) {
+  editingId = id;
+  editingHumor = humor;
+  document.getElementById('edit-ta').value = conteudo;
+  document.getElementById('edit-modal').classList.add('open');
+}
+
+function closeEditModal() {
+  document.getElementById('edit-modal').classList.remove('open');
+  editingId = null;
+}
+
+async function confirmEdit() {
+  const novoConteudo = document.getElementById('edit-ta').value.trim();
+  if (!novoConteudo) { toast('Escreva algo!'); return; }
+  await fetch(`http://127.0.0.1:8000/api/diary/${editingId}`, {
+    method: 'PUT',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify({ conteudo: novoConteudo, humor: editingHumor })
+  });
+  closeEditModal();
+  toast('Entrada atualizada! ✏️');
+  loadDiaryEntries();
+}
+
+async function deleteDiary(id) {
+  if (!confirm('Deletar essa entrada?')) return;
+  await fetch(`http://127.0.0.1:8000/api/diary/${id}`, { method: 'DELETE' });
+  toast('Entrada deletada!');
+  loadDiaryEntries();
+}
