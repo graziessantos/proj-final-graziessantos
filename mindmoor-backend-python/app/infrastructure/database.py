@@ -3,7 +3,7 @@ from sqlalchemy.orm import sessionmaker
 from app.domain.models import Base
 import os
 
-SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "sqlite:///./mindmoor.db")
+SQLALCHEMY_DATABASE_URL = os.getenv("DATABASE_URL", "postgresql://mindmoor:mindmoor123@db/mindmoor")
 
 engine = create_engine(SQLALCHEMY_DATABASE_URL)
 
