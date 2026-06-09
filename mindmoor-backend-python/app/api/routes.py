@@ -1,8 +1,10 @@
 from fastapi import APIRouter, Depends, HTTPException
 from sqlalchemy.orm import Session
 from app.infrastructure.database import get_db
-from app.infrastructure.repositories import DiaryRepository, MedicationRepository, TherapySessionRepository, MilestoneRepository
-from app.domain.models import DiaryEntry, Medication, TherapySession, Milestone
+from app.application.diary_service import DiaryService
+from app.application.medication_service import MedicationService
+from app.application.session_service import SessionService
+from app.application.milestone_service import MilestoneService
 from pydantic import BaseModel
 from datetime import datetime
 
@@ -50,95 +52,114 @@ class MilestoneUpdate(BaseModel):
 # Diário
 @router.get("/diary")
 def get_all_diary(db: Session = Depends(get_db)):
-    return DiaryRepository(db).get_all()
+    return DiaryService(db).get_all()
 
 @router.get("/diary/{id}")
 def get_diary(id: int, db: Session = Depends(get_db)):
-    entry = DiaryRepository(db).get_by_id(id)
-    if not entry:
-        raise HTTPException(status_code=404, detail="Entrada não encontrada")
-    return entry
+    try:
+        return DiaryService(db).get_by_id(id)
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 @router.post("/diary")
 def create_diary(data: DiaryEntryCreate, db: Session = Depends(get_db)):
-    entry = DiaryEntry(user_id=data.user_id, conteudo=data.conteudo, humor=data.humor)
-    return DiaryRepository(db).add(entry)
+    try:
+        return DiaryService(db).create(data.user_id, data.conteudo, data.humor)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @router.delete("/diary/{id}")
 def delete_diary(id: int, db: Session = Depends(get_db)):
-    DiaryRepository(db).delete(id)
-    return {"message": "Deletado com sucesso"}
+    try:
+        DiaryService(db).delete(id)
+        return {"message": "Deletado com sucesso"}
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 @router.put("/diary/{id}")
 def update_diary(id: int, data: DiaryEntryUpdate, db: Session = Depends(get_db)):
-    entry = DiaryRepository(db).update(id, data.model_dump(exclude_none=True))
-    if not entry:
-        raise HTTPException(status_code=404, detail="Entrada não encontrada")
-    return entry
+    try:
+        return DiaryService(db).update(id, data.model_dump(exclude_none=True))
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 # Medicações
 @router.get("/medications")
 def get_all_medications(db: Session = Depends(get_db)):
-    return MedicationRepository(db).get_all()
+    return MedicationService(db).get_all()
 
 @router.post("/medications")
 def create_medication(data: MedicationCreate, db: Session = Depends(get_db)):
-    med = Medication(user_id=data.user_id, nome_remedio=data.nome_remedio, dosagem=data.dosagem, horario=data.horario)
-    return MedicationRepository(db).add(med)
+    try:
+        return MedicationService(db).create(data.user_id, data.nome_remedio, data.dosagem, data.horario)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @router.delete("/medications/{id}")
 def delete_medication(id: int, db: Session = Depends(get_db)):
-    MedicationRepository(db).delete(id)
-    return {"message": "Deletado com sucesso"}
+    try:
+        MedicationService(db).delete(id)
+        return {"message": "Deletado com sucesso"}
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 @router.put("/medications/{id}")
 def update_medication(id: int, data: MedicationUpdate, db: Session = Depends(get_db)):
-    med = MedicationRepository(db).update(id, data.model_dump(exclude_none=True))
-    if not med:
-        raise HTTPException(status_code=404, detail="Medicamento não encontrado")
-    return med
-
+    try:
+        return MedicationService(db).update(id, data.model_dump(exclude_none=True))
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 # Sessões
 @router.get("/sessions")
 def get_all_sessions(db: Session = Depends(get_db)):
-    return TherapySessionRepository(db).get_all()
+    return SessionService(db).get_all()
 
 @router.post("/sessions")
 def create_session(data: TherapySessionCreate, db: Session = Depends(get_db)):
-    session = TherapySession(user_id=data.user_id, nome_terapeuta=data.nome_terapeuta, anotacoes=data.anotacoes)
-    return TherapySessionRepository(db).add(session)
+    try:
+        return SessionService(db).create(data.user_id, data.nome_terapeuta, data.anotacoes)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @router.delete("/sessions/{id}")
 def delete_session(id: int, db: Session = Depends(get_db)):
-    TherapySessionRepository(db).delete(id)
-    return {"message": "Deletado com sucesso"}
+    try:
+        SessionService(db).delete(id)
+        return {"message": "Deletado com sucesso"}
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 @router.put("/sessions/{id}")
 def update_session(id: int, data: TherapySessionUpdate, db: Session = Depends(get_db)):
-    session = TherapySessionRepository(db).update(id, data.model_dump(exclude_none=True))
-    if not session:
-        raise HTTPException(status_code=404, detail="Sessão não encontrada")
-    return session
+    try:
+        return SessionService(db).update(id, data.model_dump(exclude_none=True))
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 # Conquistas
 @router.get("/milestones")
 def get_all_milestones(db: Session = Depends(get_db)):
-    return MilestoneRepository(db).get_all()
+    return MilestoneService(db).get_all()
 
 @router.post("/milestones")
 def create_milestone(data: MilestoneCreate, db: Session = Depends(get_db)):
-    milestone = Milestone(user_id=data.user_id, nome_conquista=data.nome_conquista)
-    return MilestoneRepository(db).add(milestone)
+    try:
+        return MilestoneService(db).create(data.user_id, data.nome_conquista)
+    except ValueError as e:
+        raise HTTPException(status_code=400, detail=str(e))
 
 @router.delete("/milestones/{id}")
 def delete_milestone(id: int, db: Session = Depends(get_db)):
-    MilestoneRepository(db).delete(id)
-    return {"message": "Deletado com sucesso"}
+    try:
+        MilestoneService(db).delete(id)
+        return {"message": "Deletado com sucesso"}
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
 
 @router.put("/milestones/{id}")
 def update_milestone(id: int, data: MilestoneUpdate, db: Session = Depends(get_db)):
-    milestone = MilestoneRepository(db).update(id, data.model_dump(exclude_none=True))
-    if not milestone:
-        raise HTTPException(status_code=404, detail="Conquista não encontrada")
-    return milestone
+    try:
+        return MilestoneService(db).update(id, data.model_dump(exclude_none=True))
+    except ValueError as e:
+        raise HTTPException(status_code=404, detail=str(e))
